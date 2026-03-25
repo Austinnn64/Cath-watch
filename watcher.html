@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cath Watch — Join</title>
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+</head>
+<body class="landing-page watcher-join-page">
+
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="noise-overlay"></div>
+
+  <!-- JOIN SCREEN -->
+  <div class="join-screen" id="joinScreen">
+    <a href="index.html" class="back-link">← Back</a>
+    <div class="join-card glass">
+      <div class="join-icon">
+        <svg viewBox="0 0 48 48" fill="none" width="48" height="48">
+          <circle cx="24" cy="24" r="20" stroke="url(#jg)" stroke-width="1.5"/>
+          <path d="M8 24s6-10 16-10 16 10 16 10-6 10-16 10S8 24 8 24z" stroke="url(#jg)" stroke-width="1.5"/>
+          <circle cx="24" cy="24" r="5" fill="url(#jg2)"/>
+          <defs>
+            <linearGradient id="jg" x1="4" y1="4" x2="44" y2="44"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#38bdf8"/></linearGradient>
+            <linearGradient id="jg2" x1="19" y1="19" x2="29" y2="29"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#38bdf8"/></linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <h2>Join a Session</h2>
+      <p>Enter the 6-character code from your host</p>
+
+      <div class="code-input-wrap">
+        <input type="text" class="code-input" id="codeInput" placeholder="XXXXXX" maxlength="6" autocomplete="off" spellcheck="false">
+      </div>
+
+      <div class="join-name-wrap">
+        <input type="text" class="name-input" id="nameInput" placeholder="Your display name (optional)" maxlength="20">
+      </div>
+
+      <div class="join-error" id="joinError" style="display:none"></div>
+
+      <button class="join-btn" id="joinBtn">
+        <span>Join Watch Party</span>
+        <svg viewBox="0 0 20 20" fill="none" width="16" height="16"><path d="M4 10h12M10 4l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- WATCHER ROOM (hidden until joined) -->
+  <div class="watcher-room" id="watcherRoom" style="display:none">
+
+    <div class="bg-orbs">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+    </div>
+
+    <header class="topbar glass">
+      <a href="index.html" class="topbar-brand">
+        <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
+          <circle cx="12" cy="12" r="10" stroke="url(#tgw)" stroke-width="1.5"/>
+          <path d="M10 8l6 4-6 4V8z" fill="url(#tgw2)"/>
+          <defs>
+            <linearGradient id="tgw" x1="2" y1="2" x2="22" y2="22"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#38bdf8"/></linearGradient>
+            <linearGradient id="tgw2" x1="10" y1="8" x2="16" y2="16"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#38bdf8"/></linearGradient>
+          </defs>
+        </svg>
+        Cath Watch
+      </a>
+
+      <div class="topbar-session">
+        <span class="session-label">Session</span>
+        <div class="session-code-box">
+          <span id="wSessionCode">——</span>
+        </div>
+        <div class="watcher-count">
+          <span class="dot"></span>
+          <span id="wWatcherNum">0</span> watching
+        </div>
+      </div>
+
+      <div class="topbar-role role-watcher">WATCHER</div>
+    </header>
+
+    <div class="room-layout">
+
+      <div class="room-left">
+        <div class="player-wrap glass">
+          <div class="player-inner" id="wPlayerInner">
+            <div class="player-empty" id="wPlayerEmpty">
+              <div class="player-empty-icon">⏳</div>
+              <p>Waiting for host to select a movie…</p>
+            </div>
+            <video id="wVideoPlayer" style="display:none" preload="metadata"></video>
+          </div>
+
+          <!-- WATCHER CONTROLS (view-only: just time display) -->
+          <div class="player-controls watcher-controls" id="wPlayerControls">
+            <div class="progress-bar-wrap readonly">
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="wProgressFill"></div>
+              </div>
+            </div>
+            <div class="controls-row">
+              <div class="controls-left">
+                <div class="sync-indicator" id="syncIndicator">
+                  <span class="sync-dot"></span> Synced
+                </div>
+                <span class="time-display" id="wTimeDisplay">0:00 / 0:00</span>
+              </div>
+              <div class="controls-right">
+                <div class="volume-wrap">
+                  <button class="ctrl-btn" id="wBtnMute">
+                    <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M11 5L6 9H2v6h4l5 4V5z" fill="currentColor"/><path class="vol-lines" d="M15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  </button>
+                  <input type="range" class="volume-slider" id="wVolumeSlider" min="0" max="1" step="0.02" value="1">
+                </div>
+                <button class="ctrl-btn" id="wBtnFullscreen">
+                  <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M16 21h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="watcher-status-bar glass">
+          <div class="status-item">
+            <span class="status-label">Now Playing</span>
+            <span class="status-value" id="wNowPlaying">Nothing yet</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Host Controls</span>
+            <span class="status-value muted">Play • Pause • Seek</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="room-right">
+        <div class="chat-panel glass">
+          <div class="chat-header">
+            <h3>Live Chat</h3>
+            <span class="chat-badge" id="wChatBadge">0</span>
+          </div>
+          <div class="chat-messages" id="wChatMessages">
+            <div class="chat-welcome">
+              <span>🎉</span> You joined the watch party!
+            </div>
+          </div>
+          <div class="chat-input-row">
+            <input type="text" class="chat-input" id="wChatInput" placeholder="Say something…" maxlength="200" autocomplete="off">
+            <button class="chat-send-btn" id="wChatSendBtn">
+              <svg viewBox="0 0 20 20" fill="none" width="16" height="16"><path d="M18 2L2 9l7 2 2 7 7-16z" fill="currentColor"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="script.js"></script>
+  <script>
+    window.CATH_ROLE = 'watcher';
+  </script>
+</body>
+</html>

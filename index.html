@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cath Watch — Watch Together</title>
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+</head>
+<body class="landing-page">
+
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <div class="noise-overlay"></div>
+
+  <main class="landing-main">
+    <div class="brand-lockup">
+      <div class="brand-icon">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="24" cy="24" r="22" stroke="url(#grad)" stroke-width="2"/>
+          <path d="M19 16l14 8-14 8V16z" fill="url(#grad2)"/>
+          <defs>
+            <linearGradient id="grad" x1="2" y1="2" x2="46" y2="46">
+              <stop offset="0%" stop-color="#a78bfa"/>
+              <stop offset="100%" stop-color="#38bdf8"/>
+            </linearGradient>
+            <linearGradient id="grad2" x1="19" y1="16" x2="33" y2="32">
+              <stop offset="0%" stop-color="#a78bfa"/>
+              <stop offset="100%" stop-color="#38bdf8"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <h1 class="brand-name">Cath Watch</h1>
+      <p class="brand-tagline">Your local cinema, shared in real-time</p>
+    </div>
+    </htmls>
+    <div class="choice-grid">
+      <a href="host.html" class="choice-card choice-host">
+        <div class="choice-card-glow"></div>
+        <div class="choice-card-inner">
+          <div class="choice-icon">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path d="M16 4C9.373 4 4 9.373 4 16s5.373 12 12 12 12-5.373 12-12S22.627 4 16 4z" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M13 11l8 5-8 5V11z" fill="currentColor"/>
+              <circle cx="24" cy="8" r="3" fill="url(#hg)"/>
+              <defs>
+                <linearGradient id="hg" x1="21" y1="5" x2="27" y2="11">
+                  <stop offset="0%" stop-color="#a78bfa"/>
+                  <stop offset="100%" stop-color="#7c3aed"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="choice-content">
+            <h2>Host</h2>
+            <p>Create a watch session, invite your friends, and control the experience</p>
+          </div>
+          <div class="choice-cta">
+            Start Session <span class="arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <div class="choice-divider">
+        <span>or</span>
+      </div>
+
+      <a href="watcher.html" class="choice-card choice-watcher">
+        <div class="choice-card-glow"></div>
+        <div class="choice-card-inner">
+          <div class="choice-icon">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path d="M2 16s5-9 14-9 14 9 14 9-5 9-14 9S2 16 2 16z" stroke="currentColor" stroke-width="1.5"/>
+              <circle cx="16" cy="16" r="4" fill="currentColor"/>
+              <circle cx="16" cy="16" r="2" fill="var(--bg-deep)"/>
+            </svg>
+          </div>
+          <div class="choice-content">
+            <h2>Watcher</h2>
+            <p>Join an existing session with a code and watch in perfect sync</p>
+          </div>
+          <div class="choice-cta">
+            Join Session <span class="arrow">→</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <p class="footer-note">Works entirely on your local network — no uploads, no servers, no cloud</p>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
