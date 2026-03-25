@@ -1,64 +1,105 @@
+// Cath Watch — Global WebSocket Server
+
 const WebSocket = require('ws');
 
-const wss = new WebSocket.Server({ port: 8080 });
+const PORT = process.env.PORT || 8080;
 
-let rooms = {}; // roomCode -> { state, clients }
+// Create server
+const wss = new WebSocket.Server({ port: PORT });
 
+// Rooms storage
+const rooms = {}; 
+// structure:
+// rooms[code] = {
+//   clients: Set<WebSocket>,
+//   state: { videoSrc, currentTime, playing }
+// }
+
+console.log("🚀 WebSocket server running on port", PORT);
+
+// Helper: broadcast to room
+function broadcast(roomCode, data, exclude = null) {
+  if (!rooms[roomCode]) return;
+
+  rooms[roomCode].clients.forEach(client => {
+    if (client !== exclude && client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(data));
+    }
+  });
+}
+
+// Handle connections
 wss.on('connection', (ws) => {
   let roomCode = null;
 
-  ws.on('message', (msg) => {
-    const data = JSON.parse(msg);
+  ws.on('message', (message) => {
+    let data;
 
-    if (data.type === 'join') {
-      roomCode = data.code;
+    try {
+      data = JSON.parse(message);
+    } catch {
+      return;
+    }
+
+    const { type, payload, code } = data;
+
+    // ─────────────── JOIN ROOM ───────────────
+    if (type === 'join') {
+      roomCode = code;
 
       if (!rooms[roomCode]) {
-        rooms[roomCode] = { clients: [], state: {} };
+        rooms[roomCode] = {
+          clients: new Set(),
+          state: {}
+        };
       }
 
-      rooms[roomCode].clients.push(ws);
+      rooms[roomCode].clients.add(ws);
 
-      // Send current state
+      console.log(`👤 User joined room: ${roomCode}`);
+
+      // Send current state to new user
       ws.send(JSON.stringify({
         type: 'sync',
         payload: rooms[roomCode].state
       }));
     }
 
-    if (data.type === 'sync') {
-      if (!roomCode) return;
+    // ─────────────── SYNC VIDEO ───────────────
+    if (type === 'sync') {
+      if (!roomCode || !rooms[roomCode]) return;
 
-      rooms[roomCode].state = data.payload;
+      rooms[roomCode].state = payload;
 
-      // Broadcast to everyone
-      rooms[roomCode].clients.forEach(client => {
-        if (client !== ws && client.readyState === 1) {
-          client.send(JSON.stringify({
-            type: 'sync',
-            payload: data.payload
-          }));
-        }
-      });
+      broadcast(roomCode, {
+        type: 'sync',
+        payload
+      }, ws);
     }
 
-    if (data.type === 'chat') {
-      rooms[roomCode].clients.forEach(client => {
-        if (client.readyState === 1) {
-          client.send(JSON.stringify({
-            type: 'chat',
-            payload: data.payload
-          }));
-        }
+    // ─────────────── CHAT ───────────────
+    if (type === 'chat') {
+      if (!roomCode || !rooms[roomCode]) return;
+
+      broadcast(roomCode, {
+        type: 'chat',
+        payload
       });
     }
   });
 
+  // ─────────────── DISCONNECT ───────────────
   ws.on('close', () => {
     if (!roomCode || !rooms[roomCode]) return;
-    rooms[roomCode].clients =
-      rooms[roomCode].clients.filter(c => c !== ws);
+
+    rooms[roomCode].clients.delete(ws);
+
+    console.log(`❌ User left room: ${roomCode}`);
+
+    // Clean empty rooms
+    if (rooms[roomCode].clients.size === 0) {
+      delete rooms[roomCode];
+      console.log(`🧹 Room deleted: ${roomCode}`);
+    }
   });
 });
-
-console.log("WebSocket server running on port 8080");
